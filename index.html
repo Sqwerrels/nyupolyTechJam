@@ -149,9 +149,7 @@ var ledge3KillState;
     {
         //  Create a mice inside of the 'mouse' group
         var coinsprite = coins.create(i * 70, 0, 'mouse');
-
-        //  Let gravity do its thing
-        coinsprite.body.gravity.y = 300;
+		coinsprite.scale.setTo( 0.1, 0.1);
 
         //  This just gives each mice a slightly random bounce value
         coinsprite.body.bounce.y = 0.7 + Math.random() * 0.2;
