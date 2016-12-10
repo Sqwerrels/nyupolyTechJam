@@ -38,10 +38,12 @@ var icicles;
 var score = 0;
 var scoreText;
 
- var ledge1;
- var ledge2;
- var ledge1KillState;
- var ledge2KillState
+var ledge1;
+var ledge2;
+var ledge3;
+var ledge1KillState;
+var ledge2KillState;
+var ledge3KillState;
 
  function create() {
      var music = game.add.audio('song');
@@ -81,23 +83,32 @@ var scoreText;
 
 
      // Now let's create two ledges
-     ledge1 = killplatforms.create(400, 400, 'ground');
+		 ledge1 = killplatforms.create(100, 400, 'ground');
      ledge1KillState = false;
-     ledge1.scale.setTo(0.33, 0.5);
+     ledge1.scale.setTo(0.5, 0.5);
      ledge1.body.immovable = true;
      ledge1.inputEnabled = true;
      ledge1.input.useHandCursor = true;
      ledge1.tint = 0xFFFF00;
      ledge1.events.onInputDown.add(killPlatform1,this);
 
-     ledge2 = killplatforms.create(150, 300, 'ground');
+     ledge2 = killplatforms.create(500, 400, 'ground');
      ledge2KillState = false;
-     ledge2.scale.setTo(0.33,0.5);
+     ledge2.scale.setTo(0.5,0.5);
      ledge2.body.immovable = true;
      ledge2.inputEnabled = true;
      ledge2.input.useHandCursor = true;
      ledge2.tint = 0xFFFF00;
-     ledge2.events.onInputDown.add(killPlatform1,this);
+     ledge2.events.onInputDown.add(killPlatform2,this);
+
+		 ledge3 = killplatforms.create(300, 300, 'ground');
+     ledge3KillState = false;
+     ledge3.scale.setTo(0.5,0.5);
+     ledge3.body.immovable = true;
+     ledge3.inputEnabled = true;
+     ledge3.input.useHandCursor = true;
+     ledge3.tint = 0xFFFF00;
+     ledge3.events.onInputDown.add(killPlatform3,this);
 
      // The player and its settings
      player = game.add.sprite(32, game.world.height - 150, 'rick');
@@ -146,6 +157,7 @@ var scoreText;
      game.physics.arcade.collide(player, platforms);
      game.physics.arcade.collide(player, ledge1, Platform1kill, null, this);
      game.physics.arcade.collide(player, ledge2, Platform2kill, null, this);
+     game.physics.arcade.collide(player, ledge3, Platform3kill, null, this);
      game.physics.arcade.collide(platforms,icicles,killRock,null, this);
      game.physics.arcade.collide(killplatforms,icicles,killRock,null, this);
 
@@ -199,6 +211,11 @@ var scoreText;
      ledge2KillState = true;
  }
 
+ function killPlatform3(ledge3){
+     ledge3.tint = 0xFF0000;
+     ledge3KillState = true;
+ }
+
 
  function Platform1kill(player,ledge){
      if(ledge1KillState){
@@ -208,7 +225,14 @@ var scoreText;
  }
 
  function Platform2kill(player,ledge){
-     if(ledge1KillState){
+     if(ledge2KillState){
+	 player.kill();
+     }
+
+ }
+
+ function Platform3kill(player,ledge){
+     if(ledge3KillState){
 	 player.kill();
      }
 
