@@ -14,7 +14,7 @@
 
 <script type="text/javascript">
 
-var game = new Phaser.Game(1024, 768, Phaser.AUTO, '', { preload: preload, create: create, update: update });
+var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create, update: update });
 
 function preload() {
 
@@ -28,7 +28,7 @@ function preload() {
 var player;
 var platforms;
 var cursors;
-var bool;
+
 var mice;
 var score = 0;
 var scoreText;
@@ -39,7 +39,7 @@ function create() {
     game.physics.startSystem(Phaser.Physics.ARCADE);
 
     //  A simple background for our game
-    game.add.sprite(0, 0, 'cave_story_background');
+    game.add.sprite(0, 0, 'sky');
 
     //  The platforms group contains the ground and the 2 ledges we can jump on
     platforms = game.add.group();
@@ -75,9 +75,8 @@ function create() {
     player.body.collideWorldBounds = true;
 
     //  Our two animations, walking left and right.
-	player.animations.add('right', [3, 4], 5, true);
     player.animations.add('left', [0, 1], 5, true);
-	
+	player.animations.add('right', [3, 4], 5, true);
 
     //  Finally some mice to collect
     mice = game.add.group();
@@ -122,7 +121,6 @@ function update() {
     {
         //  Move to the left
         player.body.velocity.x = -150;
-		bool = true;
 
         player.animations.play('left');
     }
@@ -130,7 +128,6 @@ function update() {
     {
         //  Move to the right
         player.body.velocity.x = 150;
-		bool = false;
 
         player.animations.play('right');
     }
@@ -138,11 +135,8 @@ function update() {
     {
         //  Stand still
         player.animations.stop();
-		
-		if (bool)
-			player.frame = 1;
-		else 
-			player.frame = 4;
+
+        player.frame = 4;
     }
     
     //  Allow the player to jump if they are touching the ground.
