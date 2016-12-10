@@ -116,57 +116,66 @@ function update() {
 
     //  Collide the player and the mice with the platforms
     game.physics.arcade.collide(player, platforms);
-    game.physics.arcade.collide(icicles, platforms);
+     game.physics.arcade.collide(platforms,icicles,killRock,null, this);
 
-    //  Checks to see if the player overlaps with any of the mice, if he does call the collectMouse function
-    game.physics.arcade.overlap(player, icicles, collectMouse, null, this);
+     //  Checks to see if the player overlaps with any of the mice, if he does call the collectMouse function
+     game.physics.arcade.overlap(player, icicles, collectMouse, null, this);
 
-    //  Reset the players velocity (movement)
-    player.body.velocity.x = 0;
+     //  Reset the players velocity (movement)
+     player.body.velocity.x = 0;
 
-    if (cursors.left.isDown)
-    {
-        //  Move to the left
-        player.body.velocity.x = -150;
+     if (cursors.left.isDown)
+	 {
+             //  Move to the left
+             player.body.velocity.x = -150;
 
-        player.animations.play('left');
-    }
-    else if (cursors.right.isDown)
-    {
-        //  Move to the right
-        player.body.velocity.x = 150;
+             player.animations.play('left');
+	 }
+     else if (cursors.right.isDown)
+	 {
+             //  Move to the right
+             player.body.velocity.x = 150;
 
-        player.animations.play('right');
-    }
-    else
-    {
-        //  Stand still
-        player.animations.stop();
+             player.animations.play('right');
+	 }
+     else
+	 {
+             //  Stand still
+             player.animations.stop();
 
-        player.frame = 4;
-    }
+             player.frame = 4;
+	 }
 
-    //  Allow the player to jump if they are touching the ground.
-    if (cursors.up.isDown && player.body.touching.down)
-    {
-        player.body.velocity.y = -350;
-    }
+     //  Allow the player to jump if they are touching the ground.
+     if (cursors.up.isDown && player.body.touching.down)
+	 {
+             player.body.velocity.y = -350;
+	 }
 
-}
+ }
 
-function collectMouse (player, icicle) {
+ function collectMouse (player, icicle) {
 
-    // Removes the mouse from the screen
-    icicle.kill();
+     // Removes the mouse from the screen
+     player.kill();
 
-    //  Add and update the score
-    score += 10;
-    scoreText.text = 'Score: ' + score;
+ }
 
-}
-function rockFall(icicle) {
+ function rockFall(icicle) {
      icicle.body.gravity.y = 100;   
  }
+
+ function killRock (platforms, icicle) {
+     // Removes the mouse from the screen
+     icicle.kill();
+ }
+
+
+ function killPlayer (player, icicle) {
+     // Removes the mouse from the screen
+     player.kill();
+ }
+
 
 </script>
 
