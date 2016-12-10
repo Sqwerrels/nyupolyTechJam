@@ -1,6 +1,6 @@
-<!doctype html> 
-<html lang="en"> 
-<head> 
+<!doctype html>
+<html lang="en">
+<head>
 	<meta charset="UTF-8" />
     <title>Phaser - Making your first game</title>
 	<script type="text/javascript" src="js/phaser.min.js"></script>
@@ -23,6 +23,8 @@ function preload() {
     game.load.image('mouse', 'assets/mouse.png');
     game.load.spritesheet('rick', 'assets/rick-sprite.png', 76, 44, 5);
 
+		game.load.audio('song', 'assets/song.wav');
+
 }
 
 var player;
@@ -34,6 +36,10 @@ var score = 0;
 var scoreText;
 
 function create() {
+		var music = game.add.audio('song');
+
+    music.play();
+
 
     //  We're going to be using physics, so enable the Arcade Physics system
     game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -104,7 +110,7 @@ function create() {
 
     //  Our controls.
     cursors = game.input.keyboard.createCursorKeys();
-    
+
 }
 
 function update() {
@@ -140,7 +146,7 @@ function update() {
 
         player.frame = 4;
     }
-    
+
     //  Allow the player to jump if they are touching the ground.
     if (cursors.up.isDown && player.body.touching.down)
     {
@@ -150,7 +156,7 @@ function update() {
 }
 
 function collectMouse (player, mouse) {
-    
+
     // Removes the mouse from the screen
     mouse.kill();
 
