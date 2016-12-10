@@ -58,6 +58,7 @@ function create() {
 
     //  Now let's create two ledges
     var ledge = platforms.create(400, 400, 'ground');
+	ledge.scale.setTo(0.5, 0.5);
     ledge.body.immovable = true;
 
     ledge = platforms.create(-150, 250, 'ground');
