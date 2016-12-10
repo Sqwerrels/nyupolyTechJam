@@ -54,17 +54,25 @@ var facingLeft;
 var winState = false;
 var winner;
 
- function create() {
-	 if(!start)
-	 {
-     var music = game.add.audio('song');
-     jump = game.add.audio('jump');
+ //Cooldown States
+ var icicleCoolDown = false;
+ var platformCoolDown = false;
 
-     music.play('', 0, 1, true);
-     music.onLoop.add(function() {
-    	 music.play('', 0, 1, true);
-     });
-		 start = true;
+ //timer
+ var iceTimer;
+
+
+ function create() {
+     if(!start)
+	 {
+	     var music = game.add.audio('song');
+	     jump = game.add.audio('jump');
+
+	     music.play('', 0, 1, true);
+	     music.onLoop.add(function() {
+    		 music.play('', 0, 1, true);
+	     });
+	     start = true;
 	 }
 
 
@@ -96,7 +104,7 @@ var winner;
 
 
      // Now let's create two ledges
-		 ledge1 = killplatforms.create(100, 400, 'ground');
+     ledge1 = killplatforms.create(100, 400, 'ground');
      ledge1KillState = false;
      ledge1.scale.setTo(0.5, 0.5);
      ledge1.body.immovable = true;
@@ -114,7 +122,7 @@ var winner;
      ledge2.tint = 0xFFFF00;
      ledge2.events.onInputDown.add(killPlatform2,this);
 
-		 ledge3 = killplatforms.create(300, 300, 'ground');
+     ledge3 = killplatforms.create(300, 300, 'ground');
      ledge3KillState = false;
      ledge3.scale.setTo(0.5,0.5);
      ledge3.body.immovable = true;
@@ -135,11 +143,11 @@ var winner;
      player.body.collideWorldBounds = true;
 
      //  Our two animations, walking left and right.
-      player.animations.add('left', [0, 1], 3, true);
+     player.animations.add('left', [0, 1], 3, true);
 
-      player.animations.add('right', [2, 3], 3, true);
+     player.animations.add('right', [2, 3], 3, true);
 
-      player.scale.setTo(2.0, 2.0);
+     player.scale.setTo(2.0, 2.0);
 
      //  Finally some mice to collect
      icicles = game.add.group();
@@ -158,32 +166,32 @@ var winner;
 
 	     icicle.events.onInputDown.add(rockFall,this);
 	 }
-	    //  Finally some mice to collect
-    coins = game.add.group();
+     //  Finally some mice to collect
+     coins = game.add.group();
 
-    //  We will enable physics for any mouse that is created in this group
-    coins.enableBody = true;
+     //  We will enable physics for any mouse that is created in this group
+     coins.enableBody = true;
 
-		coinsprite = coins.create(100, 500, 'coin');
-		coinsprite.scale.setTo(0.1, 0.1);
-		coinsprite = coins.create(680, 500, 'coin');
-		coinsprite.scale.setTo(0.1, 0.1);
-		coinsprite = coins.create(390, 500, 'coin');
-		coinsprite.scale.setTo(0.1, 0.1);
-		coinsprite = coins.create(190, 350, 'coin');
-		coinsprite.scale.setTo(0.1, 0.1);
-		coinsprite = coins.create(590, 350, 'coin');
-		coinsprite.scale.setTo(0.1, 0.1);
-		coinsprite = coins.create(50, 250, 'coin');
-		coinsprite.scale.setTo(0.1, 0.1);
-		coinsprite = coins.create(730, 250, 'coin');
-		coinsprite.scale.setTo(0.1, 0.1);
-		coinsprite = coins.create(390, 250, 'coin');
-		coinsprite.scale.setTo(0.1, 0.1);
-		coinsprite = coins.create(190, 200, 'coin');
-		coinsprite.scale.setTo(0.1, 0.1);
-		coinsprite = coins.create(590, 200, 'coin');
-		coinsprite.scale.setTo(0.1, 0.1);
+     coinsprite = coins.create(100, 500, 'coin');
+     coinsprite.scale.setTo(0.1, 0.1);
+     coinsprite = coins.create(680, 500, 'coin');
+     coinsprite.scale.setTo(0.1, 0.1);
+     coinsprite = coins.create(390, 500, 'coin');
+     coinsprite.scale.setTo(0.1, 0.1);
+     coinsprite = coins.create(190, 350, 'coin');
+     coinsprite.scale.setTo(0.1, 0.1);
+     coinsprite = coins.create(590, 350, 'coin');
+     coinsprite.scale.setTo(0.1, 0.1);
+     coinsprite = coins.create(50, 250, 'coin');
+     coinsprite.scale.setTo(0.1, 0.1);
+     coinsprite = coins.create(730, 250, 'coin');
+     coinsprite.scale.setTo(0.1, 0.1);
+     coinsprite = coins.create(390, 250, 'coin');
+     coinsprite.scale.setTo(0.1, 0.1);
+     coinsprite = coins.create(190, 200, 'coin');
+     coinsprite.scale.setTo(0.1, 0.1);
+     coinsprite = coins.create(590, 200, 'coin');
+     coinsprite.scale.setTo(0.1, 0.1);
 
      //  The score
      scoreText = game.add.text(16, 550, 'Coins Remaining: 10', { fontSize: '32px', fill: '#000' });
@@ -203,57 +211,57 @@ var winner;
      game.physics.arcade.collide(player, ledge3, Platform3kill, null, this);
      game.physics.arcade.collide(platforms,icicles,killRock,null, this);
      game.physics.arcade.collide(killplatforms,icicles,killRock,null, this);
-	 game.physics.arcade.collide(coins, platforms);
+     game.physics.arcade.collide(coins, platforms);
 
      //  Checks to see if the player overlaps with any of the mice, if he does call the collectMouse function
      game.physics.arcade.overlap(player, icicles, killPlayer, null, this);
-	 game.physics.arcade.overlap(player, coins, collectCoin, null, this);
+     game.physics.arcade.overlap(player, coins, collectCoin, null, this);
 
      //  Reset the players velocity (movement)
      player.body.velocity.x = 0;
 
 
-    if (cursors.left.isDown)
-    {
-        //  Move to the left
-        playerRight = false;
-        player.body.velocity.x = -100;
-        player.animations.play('left');
-    }
-    else if (cursors.right.isDown)
-    {
-        //  Move to the right
-        playerRight = true;
-        player.body.velocity.x = 100;
-        player.animations.play('right');
-    }
-	else if(cursors.down.isDown){
-		if(winState == true){
-		    score = 10;
-			ledge1KillState = false;
-			ledge2KillState = false;
-			ledge3KillState = false;
-			winState = false;
-			game.state.start(game.state.current);
-		}
-	}
-    else
-    {
-        //  Stand still
-        player.animations.stop();
+     if (cursors.left.isDown)
+	 {
+             //  Move to the left
+             playerRight = false;
+             player.body.velocity.x = -100;
+             player.animations.play('left');
+	 }
+     else if (cursors.right.isDown)
+	 {
+             //  Move to the right
+             playerRight = true;
+             player.body.velocity.x = 100;
+             player.animations.play('right');
+	 }
+     else if(cursors.down.isDown){
+	 if(winState == true){
+	     score = 10;
+	     ledge1KillState = false;
+	     ledge2KillState = false;
+	     ledge3KillState = false;
+	     winState = false;
+	     game.state.start(game.state.current);
+	 }
+     }
+     else
+	 {
+             //  Stand still
+             player.animations.stop();
 
-        if(playerRight == true)
-        {
-        player.frame = 3;
-        }
+             if(playerRight == true)
+		 {
+		     player.frame = 3;
+		 }
 
-         if(playerRight == false)
-        {
-        player.frame = 0;
-        }
+             if(playerRight == false)
+		 {
+		     player.frame = 0;
+		 }
 
-        //player.frame = 4;
-    }
+             //player.frame = 4;
+	 }
 
      //  Allow the player to jump if they are touching the ground.
      if (cursors.up.isDown && player.body.touching.down)
@@ -316,36 +324,67 @@ var winner;
      //  Add and update the score
      score -= 1;
      scoreText.text = 'Coins Remaining: ' + score;
-	 if(score == 0){
-		winner = 'PLAYER ONE';
-		endState();
-	 }
+     if(score == 0){
+	 winner = 'PLAYER ONE';
+	 endState();
+     }
 
  }
 
  function rockFall(icicle) {
-     icicle.body.gravity.y = 100;
+     if (!icicleCoolDown){
+	 icicle.body.gravity.y = 100;
+	 this.game.canvas.style.cursor = "default";
+	 for (var i = 0, len = icicles.children.length; i < len; i++) {
+	     icicles.children[i].input.useHandCursor = false;
+
+	 }
+
+	 icicleCoolDown = true;
+     }
+ }
+
+ function resetIce() {
+     game.time.events.remove(iceTimer);
+     
+     for (var i = 0, len = icicles.children.length; i < len; i++) {
+	 /* icicles.children[i].input.useHandCursor = true;*/
+	 icicles.children[i].kill()
+     }
+
+     for (var i = 0; i < 12; i++)
+	 {
+	     //  Create a mice inside of the 'mouse' group
+	     var icicle = icicles.create(i * 70, 0, 'icicle');
+
+	     icicle.inputEnabled = true;
+	     icicle.input.useHandCursor = true;
+
+	     icicle.events.onInputDown.add(rockFall,this);
+	 }
+     icicleCoolDown = false;
  }
 
  function killRock (platforms, icicle) {
      // Removes the mouse from the screen
      icicle.kill();
+     iceTimer = game.time.events.loop(1500, resetIce, this);
  }
 
 
  function killPlayer (player, icicle) {
      // Removes the mouse from the screen
      player.kill();
-	 winner = 'PLAYER TWO';
-	 endState();
+     winner = 'PLAYER TWO';
+     endState();
  }
-   function endState(){
-	game.world.removeAll()
+ function endState(){
+     game.world.removeAll()
      winState = true;
      //game.add.sprite(0, 0, 'winState');
      game.add.text(300, 300, winner + ' WON', { fontSize: '32px', fill: '#FFF' });
-	 game.add.text(250, 350, 'PRESS DOWN TO RESTART', { fontSize: '32px', fill: '#FFF' });
-  }
+     game.add.text(250, 350, 'PRESS DOWN TO RESTART', { fontSize: '32px', fill: '#FFF' });
+ }
 
 
 </script>
