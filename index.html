@@ -30,6 +30,7 @@ function preload() {
 var player;
 var platforms;
 var cursors;
+var coins;
 
 var icicles;
 var score = 0;
@@ -62,14 +63,26 @@ function create() {
     //  This stops it from falling away when you jump on it
     ground.body.immovable = true;
 
-    //  Now let's create two ledges
-    var ledge = platforms.create(400, 400, 'ground');
+     var ledge = platforms.create(400, 400, 'ground');
+	ledge.tint = 0x0000FF;
 	ledge.scale.setTo(0.33, 0.5);
     ledge.body.immovable = true;
 
-    ledge = platforms.create(150, 300, 'ground');
+    ledge = platforms.create(150, 400, 'ground');
+	ledge.tint = 0x0000FF;
 	ledge.scale.setTo(0.33,0.5);
     ledge.body.immovable = true;
+	
+	ledge = platform.create(300,300, 'ground');
+	ledge.tint = 0x0000FF;
+	ledge.scale.setTo(0.33,0.5);
+	ledge.body.immovable = true;
+	
+	ledge = platform.create(300, 500, 'ground');
+	ledge.tint = 0x0000FF;
+	ledge.scale.setTo(0.33,0.5);
+	ledge.body.immovable = true;
+	
 
     // The player and its settings
     player = game.add.sprite(32, game.world.height - 150, 'rick');
@@ -105,7 +118,7 @@ function create() {
     }
 
     //  The score
-    scoreText = game.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
+    scoreText = game.add.text(750, 16, 'Coin Remaining: 10', { fontSize: '32px', fill: '#000' });
 
     //  Our controls.
     cursors = game.input.keyboard.createCursorKeys();
@@ -156,12 +169,16 @@ function update() {
 
  }
 
- function collectMouse (player, icicle) {
+function collectCoin (player, coin) {
+    
+    // Removes the mouse from the screen
+    coin.kill();
 
-     // Removes the mouse from the screen
-     player.kill();
+    //  Add and update the score
+    score -= 1;
+    scoreText.text = 'Coins Remaining: ' + score;
 
- }
+}
 
  function rockFall(icicle) {
      icicle.body.gravity.y = 100;   
