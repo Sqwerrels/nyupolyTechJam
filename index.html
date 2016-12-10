@@ -32,6 +32,7 @@ var player;
 var platforms;
 var cursors;
 var coins;
+var jump;
 
 var icicles;
 var score = 0;
@@ -39,7 +40,7 @@ var scoreText;
 
 function create() {
 		var music = game.add.audio('song');
-		var jump = game.add.audio('jump');
+		jump = game.add.audio('jump');
 
 		music.play('', 0, 1, true);
 			music.onLoop.add(function() {
