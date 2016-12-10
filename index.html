@@ -63,26 +63,14 @@ function create() {
     //  This stops it from falling away when you jump on it
     ground.body.immovable = true;
 
-     var ledge = platforms.create(400, 400, 'ground');
-	ledge.tint = 0x0000FF;
+    //  Now let's create two ledges
+    var ledge = platforms.create(400, 400, 'ground');
 	ledge.scale.setTo(0.33, 0.5);
     ledge.body.immovable = true;
 
-    ledge = platforms.create(150, 400, 'ground');
-	ledge.tint = 0x0000FF;
+    ledge = platforms.create(150, 300, 'ground');
 	ledge.scale.setTo(0.33,0.5);
     ledge.body.immovable = true;
-	
-	ledge = platform.create(300,300, 'ground');
-	ledge.tint = 0x0000FF;
-	ledge.scale.setTo(0.33,0.5);
-	ledge.body.immovable = true;
-	
-	ledge = platform.create(300, 500, 'ground');
-	ledge.tint = 0x0000FF;
-	ledge.scale.setTo(0.33,0.5);
-	ledge.body.immovable = true;
-	
 
     // The player and its settings
     player = game.add.sprite(32, game.world.height - 150, 'rick');
