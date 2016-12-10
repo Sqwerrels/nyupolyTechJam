@@ -47,6 +47,9 @@ var ledge1KillState;
 var ledge2KillState;
 var ledge3KillState;
 
+var winState = false;
+var winner;
+
  function create() {
      var music = game.add.audio('song');
      jump = game.add.audio('jump');
@@ -215,6 +218,16 @@ var ledge3KillState;
         player.body.velocity.x = 100;
         player.animations.play('right');
     }
+	else if(cursors.down.isDown){
+		if(winState == true){
+		    score = 10;
+			ledge1KillState = false;
+			ledge2KillState = false;
+			ledge3KillState = false;
+			winState = false;
+			this.create();
+		}
+	}
     else
     {
         //  Stand still
@@ -262,6 +275,8 @@ var ledge3KillState;
  function Platform1kill(player,ledge){
      if(ledge1KillState){
 	 player.kill();
+	 winner = 'PLAYER TWO';
+	 endState();
      }
 
  }
@@ -269,6 +284,8 @@ var ledge3KillState;
  function Platform2kill(player,ledge){
      if(ledge2KillState){
 	 player.kill();
+	 winner = 'PLAYER TWO';
+	 endState();
      }
 
  }
@@ -276,6 +293,8 @@ var ledge3KillState;
  function Platform3kill(player,ledge){
      if(ledge3KillState){
 	 player.kill();
+	 winner = 'PLAYER TWO';
+	 endState();
      }
 
  }
@@ -288,6 +307,10 @@ var ledge3KillState;
      //  Add and update the score
      score -= 1;
      scoreText.text = 'Coins Remaining: ' + score;
+	 if(score == 0){
+		winner = 'PLAYER ONE';
+		endState();
+	 }
 
  }
 
@@ -304,7 +327,16 @@ var ledge3KillState;
  function killPlayer (player, icicle) {
      // Removes the mouse from the screen
      player.kill();
+	 winner = 'PLAYER TWO';
+	 endState();
  }
+   function endState(){
+	game.world.removeAll()
+     winState = true;
+     //game.add.sprite(0, 0, 'winState');
+     game.add.text(300, 300, winner + ' WON', { fontSize: '32px', fill: '#FFF' });
+	 game.add.text(250, 350, 'PRESS DOWN TO RESTART', { fontSize: '32px', fill: '#FFF' });
+  }
 
 
 </script>
