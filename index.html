@@ -22,7 +22,7 @@ function preload() {
     game.load.image('ground', 'assets/platform.png');
     game.load.image('icicle', 'assets/Icicle_sprite.png');
 	game.load.image('coin', 'assets/coin.png');
-    game.load.spritesheet('rick', 'assets/rick-sprite.png', 76, 44, 5);
+    game.load.spritesheet('p1', 'assets/characters_3_Final.png', 34, 32, 4);
 
 
 		game.load.audio('song', 'assets/song.wav');
@@ -124,8 +124,11 @@ var ledge3KillState;
      player.body.collideWorldBounds = true;
 
      //  Our two animations, walking left and right.
-     player.animations.add('left', [0, 1], 5, true);
-     player.animations.add('right', [3, 4], 5, true);
+      player.animations.add('left', [0, 1], 3, true);
+
+      player.animations.add('right', [2, 3], 3, true);
+
+      player.scale.setTo(2.0, 2.0);
 
      //  Finally some mice to collect
      icicles = game.add.group();
@@ -197,29 +200,38 @@ var ledge3KillState;
      //  Reset the players velocity (movement)
      player.body.velocity.x = 0;
 
-     if (cursors.left.isDown)
-	 {
-             //  Move to the left
-             player.body.velocity.x = -150;
-	     i = 1;
-             player.animations.play('left');
-	 }
-     else if (cursors.right.isDown)
-	 {
-             //  Move to the right
-             player.body.velocity.x = 150;
-	     i = 0;
-             player.animations.play('right');
-	 }
-     else
-	 {
-             //  Stand still
-             player.animations.stop();
-	     if(i == 0)
-		 player.frame = 4;
-	     else if(i == 1)
-		 player.frame = 1;
-	 }
+    var playerRight = true;
+    if (cursors.left.isDown)
+    {
+        //  Move to the left
+        playerRight = false;
+        player.body.velocity.x = -100;
+        player.animations.play('left');
+    }
+    else if (cursors.right.isDown)
+    {
+        //  Move to the right
+        playerRight = true;
+        player.body.velocity.x = 100;
+        player.animations.play('right');
+    }
+    else
+    {
+        //  Stand still
+        player.animations.stop();
+        
+        if(playerRight == true)
+        {
+        player.frame = 3;
+        }
+
+         if(playerRight == false)
+        {
+        player.frame = 0;
+        }
+        
+        //player.frame = 4;
+    }
 
      //  Allow the player to jump if they are touching the ground.
      if (cursors.up.isDown && player.body.touching.down)
