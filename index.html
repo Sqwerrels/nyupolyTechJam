@@ -20,7 +20,7 @@ function preload() {
 
     game.load.image('sky', 'assets/cave_story_background.gif');
     game.load.image('ground', 'assets/platform.png');
-    game.load.image('mouse', 'assets/mouse.png');
+    game.load.image('icicle', 'assets/Icicle_sprite.png');
     game.load.spritesheet('rick', 'assets/rick-sprite.png', 76, 44, 5);
 
 		game.load.audio('song', 'assets/song.wav');
@@ -31,7 +31,7 @@ var player;
 var platforms;
 var cursors;
 
-var mice;
+var icicles;
 var score = 0;
 var scoreText;
 
@@ -87,22 +87,21 @@ function create() {
 	player.animations.add('right', [3, 4], 5, true);
 
     //  Finally some mice to collect
-    mice = game.add.group();
+    icicles = game.add.group();
 
     //  We will enable physics for any mouse that is created in this group
-    mice.enableBody = true;
+    icicles.enableBody = true;
 
     //  Here we'll create 12 of them evenly spaced apart
     for (var i = 0; i < 12; i++)
     {
         //  Create a mice inside of the 'mouse' group
-        var mouse = mice.create(i * 70, 0, 'mouse');
+        var icicle = icicles.create(i * 70, 0, 'icicle');
 
-        //  Let gravity do its thing
-        mouse.body.gravity.y = 300;
-
-        //  This just gives each mice a slightly random bounce value
-        mouse.body.bounce.y = 0.7 + Math.random() * 0.2;
+        icicle.inputEnabled = true;
+	    icicle.input.useHandCursor = true;
+	     
+	    icicle.events.onInputDown.add(rockFall,this);
     }
 
     //  The score
@@ -117,10 +116,10 @@ function update() {
 
     //  Collide the player and the mice with the platforms
     game.physics.arcade.collide(player, platforms);
-    game.physics.arcade.collide(mice, platforms);
+    game.physics.arcade.collide(icicles, platforms);
 
     //  Checks to see if the player overlaps with any of the mice, if he does call the collectMouse function
-    game.physics.arcade.overlap(player, mice, collectMouse, null, this);
+    game.physics.arcade.overlap(player, icicles, collectMouse, null, this);
 
     //  Reset the players velocity (movement)
     player.body.velocity.x = 0;
@@ -155,16 +154,19 @@ function update() {
 
 }
 
-function collectMouse (player, mouse) {
+function collectMouse (player, icicle) {
 
     // Removes the mouse from the screen
-    mouse.kill();
+    icicle.kill();
 
     //  Add and update the score
     score += 10;
     scoreText.text = 'Score: ' + score;
 
 }
+function rockFall(icicle) {
+     icicle.body.gravity.y = 100;   
+ }
 
 </script>
 
