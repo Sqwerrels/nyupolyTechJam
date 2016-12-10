@@ -144,6 +144,12 @@ var ledge3KillState;
 
 	     icicle.events.onInputDown.add(rockFall,this);
 	 }
+	    //  Finally some mice to collect
+    coins = game.add.group();
+
+    //  We will enable physics for any mouse that is created in this group
+    coins	.enableBody = true;
+
 
 	 for (var i = 0; i < 12; i++)
     {
@@ -171,9 +177,11 @@ var ledge3KillState;
      game.physics.arcade.collide(player, ledge3, Platform3kill, null, this);
      game.physics.arcade.collide(platforms,icicles,killRock,null, this);
      game.physics.arcade.collide(killplatforms,icicles,killRock,null, this);
+	 game.physics.arcade.collide(coins, platforms);
 
      //  Checks to see if the player overlaps with any of the mice, if he does call the collectMouse function
      game.physics.arcade.overlap(player, icicles, killPlayer, null, this);
+	 game.physics.arcade.overlap(player, mice, collectCoin, null, this);
 
      //  Reset the players velocity (movement)
      player.body.velocity.x = 0;
