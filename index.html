@@ -148,18 +148,13 @@ var ledge3KillState;
     coins = game.add.group();
 
     //  We will enable physics for any mouse that is created in this group
-    coins	.enableBody = true;
+    coins.enableBody = true;
 
+		coinsprite = coins.create(100, 500, 'coin');
+		coinsprite.scale.setTo(0.1, 0.1);
+		coinsprite = coins.create(680, 500, 'coin');
+		coinsprite.scale.setTo(0.1, 0.1);
 
-	 for (var i = 0; i < 12; i++)
-    {
-        //  Create a mice inside of the 'mouse' group
-        var coinsprite = coins.create(i * 70, 0, 'coin');
-		coinsprite.scale.setTo( 0.1, 0.1);
-
-        //  This just gives each mice a slightly random bounce value
-        coinsprite.body.bounce.y = 0.7 + Math.random() * 0.2;
-    }
      //  The score
      scoreText = game.add.text(16, 550, 'Coins Remaining: 10', { fontSize: '32px', fill: '#000' });
 
