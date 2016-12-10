@@ -38,92 +38,116 @@ var icicles;
 var score = 0;
 var scoreText;
 
-function create() {
-		var music = game.add.audio('song');
-		jump = game.add.audio('jump');
+ var ledge1;
+ var ledge2;
+ var ledge1KillState;
+ var ledge2KillState
 
-		music.play('', 0, 1, true);
-			music.onLoop.add(function() {
-    		music.play('', 0, 1, true);
-			});
+ function create() {
+     var music = game.add.audio('song');
+     jump = game.add.audio('jump');
+
+     music.play('', 0, 1, true);
+     music.onLoop.add(function() {
+    	 music.play('', 0, 1, true);
+     });
 
 
-    //  We're going to be using physics, so enable the Arcade Physics system
-    game.physics.startSystem(Phaser.Physics.ARCADE);
+     //  We're going to be using physics, so enable the Arcade Physics system
+     game.physics.startSystem(Phaser.Physics.ARCADE);
 
-    //  A simple background for our game
-    game.add.sprite(0, 0, 'sky');
+     //  A simple background for our game
+     game.add.sprite(0, 0, 'sky');
 
-    //  The platforms group contains the ground and the 2 ledges we can jump on
-    platforms = game.add.group();
+     //  The platforms group contains the ground and the 2 ledges we can jump on
+     platforms = game.add.group();
 
-    //  We will enable physics for any object that is created in this group
-    platforms.enableBody = true;
+     //  We will enable physics for any object that is created in this group
+     platforms.enableBody = true;
 
-    // Here we create the ground.
-    var ground = platforms.create(0, game.world.height - 64, 'ground');
+     // Here we create the ground.
+     var ground = platforms.create(0, game.world.height - 64, 'ground');
 
-    //  Scale it to fit the width of the game (the original sprite is 400x32 in size)
-    ground.scale.setTo(2, 2);
+     //  Scale it to fit the width of the game (the original sprite is 400x32 in size)
+     ground.scale.setTo(2, 2);
 
-    //  This stops it from falling away when you jump on it
-    ground.body.immovable = true;
+     //  This stops it from falling away when you jump on it
+     ground.body.immovable = true;
 
-    //  Now let's create two ledges
-    var ledge = platforms.create(400, 400, 'ground');
-	ledge.scale.setTo(0.33, 0.5);
-    ledge.body.immovable = true;
+     // Killer platforms
+     killplatforms = game.add.group();
 
-    ledge = platforms.create(150, 300, 'ground');
-	ledge.scale.setTo(0.33,0.5);
-    ledge.body.immovable = true;
+     killplatforms.enableBody = true;
 
-    // The player and its settings
-    player = game.add.sprite(32, game.world.height - 150, 'rick');
 
-    //  We need to enable physics on the player
-    game.physics.arcade.enable(player);
+     // Now let's create two ledges
+     ledge1 = killplatforms.create(400, 400, 'ground');
+     ledge1KillState = false;
+     ledge1.scale.setTo(0.33, 0.5);
+     ledge1.body.immovable = true;
+     ledge1.inputEnabled = true;
+     ledge1.input.useHandCursor = true;
+     ledge1.tint = 0x00FFFF
+     ledge1.events.onInputDown.add(killPlatform1,this);
 
-    //  Player physics properties. Give the little guy a slight bounce.
-    player.body.bounce.y = 0.2;
-    player.body.gravity.y = 400;
-    player.body.collideWorldBounds = true;
+     ledge2 = killplatforms.create(150, 300, 'ground');
+     ledge2KillState = false;
+     ledge2.scale.setTo(0.33,0.5);
+     ledge2.body.immovable = true;
+     ledge2.inputEnabled = true;
+     ledge2.input.useHandCursor = true;
+     ledge2.tint = 0x00FFFF
+     ledge2.events.onInputDown.add(killPlatform1,this);
 
-    //  Our two animations, walking left and right.
-    player.animations.add('left', [0, 1], 5, true);
-	player.animations.add('right', [3, 4], 5, true);
+     // The player and its settings
+     player = game.add.sprite(32, game.world.height - 150, 'rick');
 
-    //  Finally some mice to collect
-    icicles = game.add.group();
+     //  We need to enable physics on the player
+     game.physics.arcade.enable(player);
 
-    //  We will enable physics for any mouse that is created in this group
-    icicles.enableBody = true;
+     //  Player physics properties. Give the little guy a slight bounce.
+     player.body.bounce.y = 0.2;
+     player.body.gravity.y = 400;
+     player.body.collideWorldBounds = true;
 
-    //  Here we'll create 12 of them evenly spaced apart
-    for (var i = 0; i < 12; i++)
-    {
-        //  Create a mice inside of the 'mouse' group
-        var icicle = icicles.create(i * 70, 0, 'icicle');
+     //  Our two animations, walking left and right.
+     player.animations.add('left', [0, 1], 5, true);
+     player.animations.add('right', [3, 4], 5, true);
 
-        icicle.inputEnabled = true;
-	    icicle.input.useHandCursor = true;
+     //  Finally some mice to collect
+     icicles = game.add.group();
 
-	    icicle.events.onInputDown.add(rockFall,this);
-    }
+     //  We will enable physics for any mouse that is created in this group
+     icicles.enableBody = true;
 
-    //  The score
-    scoreText = game.add.text(16, 550, 'Coin Remaining: 10', { fontSize: '32px', fill: '#000' });
+     //  Here we'll create 12 of them evenly spaced apart
+     for (var i = 0; i < 12; i++)
+	 {
+             //  Create a mice inside of the 'mouse' group
+             var icicle = icicles.create(i * 70, 0, 'icicle');
 
-    //  Our controls.
-    cursors = game.input.keyboard.createCursorKeys();
+             icicle.inputEnabled = true;
+	     icicle.input.useHandCursor = true;
 
-}
-var i = 0;
-function update() {
+	     icicle.events.onInputDown.add(rockFall,this);
+	 }
 
-    //  Collide the player and the mice with the platforms
-    game.physics.arcade.collide(player, platforms);
+     //  The score
+     scoreText = game.add.text(16, 550, 'Coin Remaining: 10', { fontSize: '32px', fill: '#000' });
+
+     //  Our controls.
+     cursors = game.input.keyboard.createCursorKeys();
+
+ }
+ var i = 0;
+ function update() {
+
+     //  Collide the player and the mice with the platforms
+     game.physics.arcade.collide(player, platforms);
+     game.physics.arcade.collide(player, ledge1, Platform1kill, null, this);
+     game.physics.arcade.collide(player, ledge2, Platform2kill, null, this);
      game.physics.arcade.collide(platforms,icicles,killRock,null, this);
+     game.physics.arcade.collide(killplatforms,icicles,killRock,null, this);
 
      //  Checks to see if the player overlaps with any of the mice, if he does call the collectMouse function
      game.physics.arcade.overlap(player, icicles, killPlayer, null, this);
@@ -135,45 +159,71 @@ function update() {
 	 {
              //  Move to the left
              player.body.velocity.x = -150;
-			 i = 1;
+	     i = 1;
              player.animations.play('left');
 	 }
      else if (cursors.right.isDown)
 	 {
              //  Move to the right
              player.body.velocity.x = 150;
-			 i = 0;
+	     i = 0;
              player.animations.play('right');
 	 }
      else
 	 {
              //  Stand still
              player.animations.stop();
-			if(i == 0)
-				player.frame = 4;
-			else if(i == 1)
-				player.frame = 1;
+	     if(i == 0)
+		 player.frame = 4;
+	     else if(i == 1)
+		 player.frame = 1;
 	 }
 
      //  Allow the player to jump if they are touching the ground.
      if (cursors.up.isDown && player.body.touching.down)
 	 {
              player.body.velocity.y = -350;
-						 jump.play();
+	     jump.play();
 	 }
 
  }
 
-function collectCoin (player, coin) {
+ //.tint = color
+ function killPlatform1(ledge1){
+     ledge1.tint = 0xFF0000;
+     ledge1KillState = true;
+ }
 
-    // Removes the mouse from the screen
-    coin.kill();
+ function killPlatform2(ledge2){
+     ledge2.tint = 0xFF0000;
+     ledge2KillState = true;
+ }
 
-    //  Add and update the score
-    score -= 1;
-    scoreText.text = 'Coins Remaining: ' + score;
 
-}
+ function Platform1kill(player,ledge){
+     if(ledge1KillState){
+	 player.kill();
+     }
+
+ }
+
+ function Platform2kill(player,ledge){
+     if(ledge1KillState){
+	 player.kill();
+     }
+
+ }
+
+ function collectCoin (player, coin) {
+
+     // Removes the mouse from the screen
+     coin.kill();
+
+     //  Add and update the score
+     score -= 1;
+     scoreText.text = 'Coins Remaining: ' + score;
+
+ }
 
  function rockFall(icicle) {
      icicle.body.gravity.y = 100;
