@@ -27,6 +27,7 @@ function preload() {
 
 		game.load.audio('song', 'assets/song.wav');
 		game.load.audio('jump', 'assets/jump.wav');
+		game.load.audio('coin', 'assets/coin.wav');
 
 }
 
@@ -68,6 +69,7 @@ var winner;
 	 {
 	     var music = game.add.audio('song');
 	     jump = game.add.audio('jump');
+	     coinSound = game.add.audio('coin');
 
 	     music.play('', 0, 1, true);
 	     music.onLoop.add(function() {
@@ -322,7 +324,7 @@ var winner;
      game.time.events.remove(platformTimer);
      ledge2.tint = 0x00FF00;
      ledge2KillState = false;
-     
+
      resetAllPlatformTimer = game.time.events.loop(1000, resetPlatformCoolDown, this);
  }
 
@@ -368,6 +370,8 @@ var winner;
      // Removes the mouse from the screen
      coin.kill();
 
+		 coinSound.play();
+
      //  Add and update the score
      score -= 1;
      scoreText.text = 'Coins Remaining: ' + score;
@@ -393,7 +397,7 @@ var winner;
 
  function resetIce() {
      game.time.events.remove(iceTimer);
-     
+
      for (var i = 0, len = icicles.children.length; i < len; i++) {
 	 /* icicles.children[i].input.useHandCursor = true;*/
 	 icicles.children[i].kill()
