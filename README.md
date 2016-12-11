@@ -1,5 +1,6 @@
-Our game
+Dead Man Winterland
 ====================
+A game by us
 
 Members
 ------------
