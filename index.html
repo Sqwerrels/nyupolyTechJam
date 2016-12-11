@@ -60,7 +60,8 @@ var winner;
 
  //timer
  var iceTimer;
-
+ var platformTimer;
+ var resetAllPlatformTimer;
 
  function create() {
      if(!start)
@@ -242,6 +243,8 @@ var winner;
 	     ledge2KillState = false;
 	     ledge3KillState = false;
 	     winState = false;
+	     platformCoolDown = false;
+	     icicleCoolDown = false;
 	     game.state.start(game.state.current);
 	 }
      }
@@ -272,22 +275,30 @@ var winner;
 
  }
 
+ function resetPlatformCoolDown(){
+     game.time.events.remove(resetAllPlatformTimer);
+     platformCoolDown = false;
+     ledge1.tint = 0xFFFF00;
+     ledge2.tint = 0xFFFF00;
+     ledge3.tint = 0xFFFF00;
+ }
+
  //.tint = color
  function killPlatform1(ledge1){
-     ledge1.tint = 0xFF0000;
-     ledge1KillState = true;
+     if (!platformCoolDown){
+	 ledge1.tint = 0xFF0000;
+	 ledge1KillState = true;
+	 platformTimer = game.time.events.loop(4000, resetPlatform1, this);
+	 platformCoolDown = true;
+     }
  }
 
- function killPlatform2(ledge2){
-     ledge2.tint = 0xFF0000;
-     ledge2KillState = true;
+ function resetPlatform1(){
+     game.time.events.remove(platformTimer);
+     ledge1.tint = 0x00FF00;
+     ledge1KillState = false;
+     resetAllPlatformTimer = game.time.events.loop(1000, resetPlatformCoolDown, this);
  }
-
- function killPlatform3(ledge3){
-     ledge3.tint = 0xFF0000;
-     ledge3KillState = true;
- }
-
 
  function Platform1kill(player,ledge){
      if(ledge1KillState){
@@ -295,7 +306,24 @@ var winner;
 	 winner = 'PLAYER TWO';
 	 endState();
      }
+ }
 
+ function killPlatform2(ledge2){
+     if (!platformCoolDown){
+	 ledge2.tint = 0xFF0000;
+	 ledge2KillState = true;
+	 platformTimer = game.time.events.loop(4000, resetPlatform2, this);
+	 platformCoolDown = true;
+     }
+ }
+
+
+ function resetPlatform2(){
+     game.time.events.remove(platformTimer);
+     ledge2.tint = 0x00FF00;
+     ledge2KillState = false;
+     
+     resetAllPlatformTimer = game.time.events.loop(1000, resetPlatformCoolDown, this);
  }
 
  function Platform2kill(player,ledge){
@@ -307,14 +335,33 @@ var winner;
 
  }
 
+ function killPlatform3(ledge3){
+     if (!platformCoolDown){
+	 ledge3.tint = 0xFF0000;
+	 ledge3KillState = true;
+	 platformTimer = game.time.events.loop(4000, resetPlatform3, this);
+	 platformCoolDown = true;
+     }
+ }
+
+ function resetPlatform3(){
+     game.time.events.remove(platformTimer);
+     ledge3.tint = 0x00FF00;
+     ledge3KillState = false;
+     resetAllPlatformTimer = game.time.events.loop(1000, resetPlatformCoolDown, this);
+ }
+
+
  function Platform3kill(player,ledge){
      if(ledge3KillState){
 	 player.kill();
 	 winner = 'PLAYER TWO';
 	 endState();
+
      }
 
  }
+
 
  function collectCoin (player, coin) {
 
@@ -333,7 +380,7 @@ var winner;
 
  function rockFall(icicle) {
      if (!icicleCoolDown){
-	 icicle.body.gravity.y = 100;
+	 icicle.body.gravity.y = 400;
 	 this.game.canvas.style.cursor = "default";
 	 for (var i = 0, len = icicles.children.length; i < len; i++) {
 	     icicles.children[i].input.useHandCursor = false;
