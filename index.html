@@ -71,7 +71,7 @@ var winner;
 	     var music = game.add.audio('song');
 	     jump = game.add.audio('jump');
 	     coinSound = game.add.audio('coin');
-	     icicle = game.add.audio('icicle');
+	     icicleSound = game.add.audio('icicle');
 
 	     music.play('', 0, 1, true);
 	     music.onLoop.add(function() {
@@ -421,7 +421,7 @@ var winner;
  function killRock (platforms, icicle) {
      // Removes the mouse from the screen
 
-		 icicle.play();
+		 icicleSound.play();
      icicle.kill();
      iceTimer = game.time.events.loop(1500, resetIce, this);
  }
